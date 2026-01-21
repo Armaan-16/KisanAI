@@ -10,7 +10,7 @@ interface AuthProps {
 }
 
 export const Auth: React.FC<AuthProps> = ({ onLogin, language, setLanguage }) => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');

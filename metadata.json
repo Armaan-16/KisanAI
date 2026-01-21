@@ -1,5 +1,8 @@
 {
   "name": "Crop GPT - Smart Farming Assistant",
   "description": "An intelligent dashboard for farmers providing real-time weather, market data, community access, and AI-powered agricultural advice.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [
+    "microphone",
+    "geolocation"
+  ]
 }

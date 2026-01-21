@@ -12,7 +12,7 @@ import {
 } from 'recharts';
 import { MarketItem, Language } from '../types';
 import { translations } from '../utils/translations';
-import { IconTrendingUp, IconTrendingDown, IconSprout } from './Icons';
+import { IconTrendingUp, IconTrendingDown, IconSprout, IconSearch, IconFilter } from './Icons';
 import { statesData } from '../utils/indianData';
 
 interface MarketWidgetProps {
@@ -52,6 +52,9 @@ const MarketWidget: React.FC<MarketWidgetProps> = ({ isDark, language }) => {
   const [selectedState, setSelectedState] = useState("Odisha");
   const [selectedDistrict, setSelectedDistrict] = useState("Bargarh");
   const [marketData, setMarketData] = useState<MarketItem[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState<'name' | 'price' | 'demand' | 'supply'>('name');
+  
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Theme colors
@@ -100,19 +103,47 @@ const MarketWidget: React.FC<MarketWidgetProps> = ({ isDark, language }) => {
     }
   };
 
+  const getProcessedData = () => {
+    let processed = [...marketData];
+
+    // Filter
+    if (searchTerm) {
+      processed = processed.filter(item => item.crop.toLowerCase().includes(searchTerm.toLowerCase()));
+    }
+
+    // Sort
+    processed.sort((a, b) => {
+      let valA: any = a[sortBy];
+      let valB: any = b[sortBy];
+      
+      if (sortBy === 'name') {
+        valA = a.crop;
+        valB = b.crop;
+        return valA.localeCompare(valB);
+      } else {
+         // Descending order for numbers (Price/Demand/Supply)
+         return valB - valA;
+      }
+    });
+
+    return processed;
+  };
+
+  const processedData = getProcessedData();
+
   return (
     <div className="bg-white dark:bg-slate-900 rounded-xl shadow-md border border-gray-100 dark:border-slate-800 p-5 h-full transition-colors duration-300 flex flex-col overflow-hidden">
-      <h3 className="text-lg font-bold text-green-700 dark:text-green-400 mb-5 text-center flex items-center justify-center gap-2">
+      <h3 className="text-lg font-bold text-green-700 dark:text-green-400 mb-5 text-center flex items-center justify-center gap-2 shrink-0">
          <IconTrendingUp className="w-5 h-5" />
          {t.marketData}
       </h3>
       
       {/* Selectors */}
-      <div className="grid grid-cols-1 gap-3 mb-6">
+      <div className="grid grid-cols-3 gap-3 mb-4 shrink-0">
         <div>
            <label className="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">{t.selectCountry}</label>
            <select 
-             className="w-full p-2.5 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-sm font-medium text-gray-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+             className="w-full p-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-xs font-medium text-gray-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-green-500"
              value={selectedCountry}
              onChange={(e) => setSelectedCountry(e.target.value)}
            >
@@ -120,39 +151,68 @@ const MarketWidget: React.FC<MarketWidgetProps> = ({ isDark, language }) => {
            </select>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">{t.selectState}</label>
+        <div>
+           <label className="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">{t.selectState}</label>
             <select
               value={selectedState}
               onChange={handleStateChange}
-              className="w-full p-2.5 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-sm font-medium text-gray-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full p-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-xs font-medium text-gray-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               {Object.keys(statesData).sort().map(state => (
                 <option key={state} value={state}>{state}</option>
               ))}
             </select>
-          </div>
+        </div>
 
-          <div>
+        <div>
             <label className="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">{t.selectDistrict}</label>
             <select
               value={selectedDistrict}
               onChange={(e) => setSelectedDistrict(e.target.value)}
-              className="w-full p-2.5 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-sm font-medium text-gray-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full p-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-xs font-medium text-gray-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               {statesData[selectedState]?.sort().map(dist => (
                 <option key={dist} value={dist}>{dist}</option>
               ))}
             </select>
-          </div>
         </div>
       </div>
 
-      {/* Graph Area */}
-      <div className="flex-1 min-h-[250px] w-full mb-6">
+      {/* Search & Sort Row */}
+      <div className="flex gap-2 mb-4 shrink-0">
+        <div className="relative flex-1">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <IconSearch className="h-4 w-4 text-gray-400" />
+            </div>
+            <input 
+                type="text" 
+                placeholder={t.searchPlaceholder}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-9 pr-3 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-sm text-gray-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+        </div>
+        <div className="relative w-1/3">
+             <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+                <IconFilter className="h-3 w-3 text-gray-400" />
+            </div>
+            <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="w-full pl-7 pr-2 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg text-sm text-gray-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+                <option value="name">{t.sortName}</option>
+                <option value="price">{t.sortPrice}</option>
+                <option value="demand">{t.sortDemand}</option>
+                <option value="supply">{t.sortSupply}</option>
+            </select>
+        </div>
+      </div>
+
+      {/* Graph Area - Fixed Height */}
+      <div className="h-[200px] w-full mb-6 shrink-0">
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={marketData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+          <ComposedChart data={processedData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
             <XAxis 
               dataKey="crop" 
@@ -189,14 +249,15 @@ const MarketWidget: React.FC<MarketWidgetProps> = ({ isDark, language }) => {
         </ResponsiveContainer>
       </div>
 
-      {/* Live Trends List */}
-      <div className="flex-1 flex flex-col min-h-0">
-        <div className="flex justify-between items-center pb-2 mb-3 border-b border-gray-100 dark:border-slate-800 shrink-0">
+      {/* Live Trends List - Flex Scrollable */}
+      <div className="flex-1 flex flex-col min-h-0 border-t border-gray-100 dark:border-slate-800 pt-2">
+        <div className="flex justify-between items-center pb-2 mb-2 shrink-0">
           <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">{t.marketTrends}</span>
           <span className="bg-red-100 text-red-600 text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">LIVE</span>
         </div>
-        <div className="space-y-3 overflow-y-auto pr-1 scrollbar-hide grow">
-          {marketData.map((item, idx) => {
+        <div className="space-y-3 overflow-y-auto pr-1 scrollbar-hide flex-1">
+          {processedData.length > 0 ? (
+            processedData.map((item, idx) => {
              const isRecommended = item.demand > item.supply + 20;
              return (
               <div key={item.crop} className={`flex justify-between items-center p-2 rounded-lg transition-colors cursor-default group ${isRecommended ? 'bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-800' : 'hover:bg-gray-50 dark:hover:bg-slate-800'}`}>
@@ -225,7 +286,12 @@ const MarketWidget: React.FC<MarketWidgetProps> = ({ isDark, language }) => {
                   </div>
                 </div>
               </div>
-          )})}
+          )})
+          ) : (
+              <div className="text-center text-gray-400 dark:text-slate-600 py-4 text-sm">
+                  No crops found.
+              </div>
+          )}
         </div>
       </div>
     </div>

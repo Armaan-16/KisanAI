@@ -15,7 +15,7 @@ export const translations: Record<Language, any> = {
     noAccount: "Don't have an account?",
     hasAccount: "Already have an account?",
     dashboard: "Dashboard",
-    weather: "Weather Alerts",
+    weather: "Weather",
     finance: "Finance Manager",
     cropPlanner: "Crop Planner",
     schemes: "Govt Schemes",
@@ -76,7 +76,56 @@ export const translations: Record<Language, any> = {
     selectState: "Select State",
     marketTrends: "Live Market Trends",
     highDemand: "High Demand",
-    volatility: "Volatility"
+    volatility: "Volatility",
+    searchPlaceholder: "Search crops...",
+    sortBy: "Sort by",
+    sortPrice: "Price",
+    sortDemand: "Demand",
+    sortSupply: "Supply",
+    sortName: "Name",
+
+    // Alerts
+    weatherAlert: "Weather Alert",
+    alertHeavyRain: "Heavy rain expected in the next 24 hours. Ensure drainage channels are clear.",
+    alertFrost: "Frost warning tonight. Cover sensitive saplings to prevent damage.",
+    alertHeatwave: "Heatwave alert! Irrigate crops frequently to maintain soil moisture.",
+    dismiss: "Dismiss",
+
+    // Community Interaction
+    writeComment: "Write a comment...",
+    send: "Send",
+    like: "Like",
+    comments: "Comments",
+
+    // Schemes
+    searchSchemes: "Search schemes...",
+    checkEligibility: "Eligibility",
+    hideDetails: "Hide Details",
+    eligibilityCriteria: "Eligibility Criteria",
+    keyFeatures: "Key Features",
+    refreshSchemes: "Refresh List",
+    updatingSchemes: "Updating schemes with AI...",
+    schemesUpdated: "Schemes updated successfully!",
+    schemesUpdateFailed: "Could not update. Using offline list.",
+
+    // Finance Update
+    transactions: "Transactions",
+    loansAndEmi: "Loans & EMI",
+    analytics: "Analytics",
+    loanAmount: "Loan Amount (₹)",
+    interestRate: "Interest Rate (%)",
+    tenureYears: "Tenure (Years)",
+    calculateEMI: "Calculate EMI",
+    monthlyEMI: "Monthly EMI",
+    totalInterest: "Total Interest",
+    totalPayment: "Total Payment",
+    saveLoan: "Save Loan",
+    activeLoans: "Active Loans",
+    netProfit: "Net Profit",
+    netLoss: "Net Loss",
+    profitLossTracker: "Profit/Loss Tracker",
+    totalEMIAlert: "Total Monthly EMI",
+    highEmiWarning: "High EMI Burden!"
   },
   hi: {
     appTitle: "क्रॉप जीपीटी",
@@ -92,7 +141,7 @@ export const translations: Record<Language, any> = {
     noAccount: "खाता नहीं है?",
     hasAccount: "पहले से खाता है?",
     dashboard: "डैशबोर्ड",
-    weather: "मौसम अलर्ट",
+    weather: "मौसम",
     finance: "वित्त प्रबंधक",
     cropPlanner: "फसल योजनाकार",
     schemes: "सरकारी योजनाएं",
@@ -153,7 +202,56 @@ export const translations: Record<Language, any> = {
     selectState: "राज्य चुनें",
     marketTrends: "लाइव बाजार रुझान",
     highDemand: "उच्च मांग",
-    volatility: "अस्थिरता"
+    volatility: "अस्थिरता",
+    searchPlaceholder: "फसल खोजें...",
+    sortBy: "क्रमबद्ध करें",
+    sortPrice: "मूल्य",
+    sortDemand: "मांग",
+    sortSupply: "आपूर्ति",
+    sortName: "नाम",
+
+    // Alerts
+    weatherAlert: "मौसम चेतावनी",
+    alertHeavyRain: "अगले 24 घंटों में भारी बारिश की संभावना है। सुनिश्चित करें कि जल निकासी नहरें साफ हैं।",
+    alertFrost: "आज रात पाले की चेतावनी। संवेदनशील पौधों को नुकसान से बचाने के लिए ढक दें।",
+    alertHeatwave: "लू की चेतावनी! मिट्टी की नमी बनाए रखने के लिए फसलों की बार-बार सिंचाई करें।",
+    dismiss: "हटाएं",
+
+    // Community Interaction
+    writeComment: "टिप्पणी लिखें...",
+    send: "भेजें",
+    like: "पसंद",
+    comments: "टिप्पणियाँ",
+
+    // Schemes
+    searchSchemes: "योजनाएं खोजें...",
+    checkEligibility: "पात्रता",
+    hideDetails: "विवरण छुपाएं",
+    eligibilityCriteria: "पात्रता मानदंड",
+    keyFeatures: "मुख्य विशेषताएं",
+    refreshSchemes: "सूची ताज़ा करें",
+    updatingSchemes: "एआई के साथ योजनाएं अपडेट हो रही हैं...",
+    schemesUpdated: "योजनाएं सफलतापूर्वक अपडेट की गईं!",
+    schemesUpdateFailed: "अपडेट नहीं हो सका। ऑफ़लाइन सूची का उपयोग कर रहे हैं।",
+
+    // Finance Update
+    transactions: "लेन-देन",
+    loansAndEmi: "ऋण और ईएमआई",
+    analytics: "विश्लेषण",
+    loanAmount: "ऋण राशि (₹)",
+    interestRate: "ब्याज दर (%)",
+    tenureYears: "अवधि (वर्ष)",
+    calculateEMI: "ईएमआई की गणना करें",
+    monthlyEMI: "मासिक ईएमआई",
+    totalInterest: "कुल ब्याज",
+    totalPayment: "कुल भुगतान",
+    saveLoan: "ऋण सहेजें",
+    activeLoans: "सक्रिय ऋण",
+    netProfit: "शुद्ध लाभ",
+    netLoss: "शुद्ध हानि",
+    profitLossTracker: "लाभ/हानि ट्रैकर",
+    totalEMIAlert: "कुल मासिक ईएमआई",
+    highEmiWarning: "उच्च ईएमआई बोझ!"
   },
   or: {
     appTitle: "କ୍ରପ୍ ଜିପିଟି",
@@ -169,7 +267,7 @@ export const translations: Record<Language, any> = {
     noAccount: "ଖାତା ନାହିଁ କି?",
     hasAccount: "ପୂର୍ବରୁ ଖାତା ଅଛି କି?",
     dashboard: "ଡ୍ୟାସବୋର୍ଡ",
-    weather: "ପାଣିପାଗ ସୂଚନା",
+    weather: "ପାଣିପାଗ",
     finance: "ଅର୍ଥ ପରିଚାଳକ",
     cropPlanner: "ଫସଲ ଯୋଜନା",
     schemes: "ସରକାରୀ ଯୋଜନା",
@@ -230,6 +328,55 @@ export const translations: Record<Language, any> = {
     selectState: "ରାଜ୍ୟ ଚୟନ କରନ୍ତୁ",
     marketTrends: "ବଜାର ଧାରା",
     highDemand: "ଉଚ୍ଚ ଚାହିଦା",
-    volatility: "ଅସ୍ଥିରତା"
+    volatility: "ଅସ୍ଥିରତା",
+    searchPlaceholder: "ଫସଲ ଖୋଜନ୍ତୁ...",
+    sortBy: "କ୍ରମ",
+    sortPrice: "ମୂଲ୍ୟ",
+    sortDemand: "ଚାହିଦା",
+    sortSupply: "ଯୋଗାଣ",
+    sortName: "ନାମ",
+
+    // Alerts
+    weatherAlert: "ପାଣିପାଗ ଚେତାବନୀ",
+    alertHeavyRain: "ଆସନ୍ତା 24 ଘଣ୍ଟା ମଧ୍ୟରେ ପ୍ରବଳ ବର୍ଷା ହେବାର ସମ୍ଭାବନା | ଜଳ ନିଷ୍କାସନ ନାଳ ସଫା ରଖନ୍ତୁ |",
+    alertFrost: "ଆଜି ରାତିରେ କୁହୁଡି ଚେତାବନୀ | ସମ୍ବେଦନଶୀଳ ଗଛକୁ ଘୋଡାଇ ରଖନ୍ତୁ |",
+    alertHeatwave: "ଗ୍ରୀଷ୍ମ ପ୍ରବାହ ଚେତାବନୀ! ମାଟିର ଆର୍ଦ୍ରତା ବଜାୟ ରଖିବା ପାଇଁ ଫସଲକୁ ବାରମ୍ବାର ଜଳସେଚନ କରନ୍ତୁ |",
+    dismiss: "ବନ୍ଦ କରନ୍ତୁ",
+
+    // Community Interaction
+    writeComment: "ମତାମତ ଲେଖନ୍ତୁ...",
+    send: "ପଠାନ୍ତୁ",
+    like: "ପସନ୍ଦ",
+    comments: "ମତାମତ",
+
+    // Schemes
+    searchSchemes: "ଯୋଜନା ଖୋଜନ୍ତୁ...",
+    checkEligibility: "ଯୋଗ୍ୟତା",
+    hideDetails: "ବିବରଣୀ ଲୁଚାନ୍ତୁ",
+    eligibilityCriteria: "ଯୋଗ୍ୟତା ମାନଦଣ୍ଡ",
+    keyFeatures: "ମୁଖ୍ୟ ବୈଶିଷ୍ଟ୍ୟଗୁଡିକ",
+    refreshSchemes: "ତାଲିକା ଅପଡେଟ୍ କରନ୍ତୁ",
+    updatingSchemes: "AI ସହିତ ଯୋଜନା ଅପଡେଟ୍ ହେଉଛି...",
+    schemesUpdated: "ଯୋଜନା ସଫଳତାର ସହ ଅପଡେଟ୍ ହେଲା!",
+    schemesUpdateFailed: "ଅପଡେଟ୍ ହୋଇପାରିଲା ନାହିଁ | ଅଫଲାଇନ୍ ତାଲିକା ବ୍ୟବହାର କରାଯାଉଛି |",
+
+    // Finance Update
+    transactions: "କାରବାର",
+    loansAndEmi: "ଋଣ ଏବଂ EMI",
+    analytics: "ବିଶ୍ଳେଷଣ",
+    loanAmount: "ଋଣ ରାଶି (₹)",
+    interestRate: "ସୁଧ ହାର (%)",
+    tenureYears: "କାର୍ଯ୍ୟକାଳ (ବର୍ଷ)",
+    calculateEMI: "EMI ଗଣନା କରନ୍ତୁ",
+    monthlyEMI: "ମାସିକ EMI",
+    totalInterest: "ମୋଟ ସୁଧ",
+    totalPayment: "ମୋଟ ଦେୟ",
+    saveLoan: "ଋଣ ସଞ୍ଚୟ କରନ୍ତୁ",
+    activeLoans: "ସକ୍ରିୟ ଋଣ",
+    netProfit: "ନିଟ୍ ଲାଭ",
+    netLoss: "ନିଟ୍ କ୍ଷତି",
+    profitLossTracker: "ଲାଭ/କ୍ଷତି ଟ୍ରାକର୍",
+    totalEMIAlert: "ମୋଟ ମାସିକ EMI",
+    highEmiWarning: "ଉଚ୍ଚ EMI ବୋଝ!"
   }
 };

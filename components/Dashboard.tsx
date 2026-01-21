@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   IconCloudRain, 
   IconWallet, 
@@ -11,7 +11,9 @@ import {
   IconLeaf,
   IconLogOut,
   IconSun,
-  IconMoon
+  IconMoon,
+  IconAlertTriangle,
+  IconX
 } from './Icons';
 import ChatWidget from './ChatWidget';
 import MarketWidget from './MarketWidget';
@@ -43,16 +45,14 @@ const DashboardCard = ({
       relative overflow-hidden rounded-xl p-6 flex flex-col items-center justify-center gap-4 cursor-pointer transition-all duration-300 group
       ${highlight 
         ? 'bg-white dark:bg-slate-900 shadow-[0_0_15px_rgba(34,197,94,0.3)] border-2 border-green-400 scale-[1.02]' 
-        : 'bg-white dark:bg-slate-900 shadow-sm hover:shadow-md border border-gray-100 dark:border-slate-800 hover:border-green-200 dark:hover:border-green-800'
+        : 'bg-white dark:bg-slate-900 shadow-sm border border-gray-100 dark:border-slate-800 hover:shadow-[0_0_15px_rgba(34,197,94,0.3)] hover:border-green-400 hover:scale-[1.02]'
       }
     `}>
-      <div className={`p-4 rounded-full ${highlight ? 'bg-green-100 dark:bg-green-900/40' : 'bg-gray-50 dark:bg-slate-800 group-hover:bg-green-50 dark:group-hover:bg-slate-700'} transition-colors`}>
-        <Icon className={`w-8 h-8 ${highlight ? 'text-green-600 dark:text-green-400' : 'text-green-600 dark:text-green-400'}`} />
+      <div className={`p-4 rounded-full ${highlight ? 'bg-green-100 dark:bg-green-900/40' : 'bg-gray-50 dark:bg-slate-800 group-hover:bg-green-100 dark:group-hover:bg-green-900/40'} transition-colors`}>
+        <Icon className={`w-8 h-8 text-green-600 dark:text-green-400`} />
       </div>
       <h3 className="font-semibold text-gray-800 dark:text-slate-100 text-center">{title}</h3>
-      {highlight && (
-        <div className="absolute inset-0 rounded-xl pointer-events-none shadow-[inset_0_0_20px_rgba(34,197,94,0.1)]"></div>
-      )}
+      <div className={`absolute inset-0 rounded-xl pointer-events-none transition-all duration-300 ${highlight ? 'shadow-[inset_0_0_20px_rgba(34,197,94,0.1)]' : 'shadow-none group-hover:shadow-[inset_0_0_20px_rgba(34,197,94,0.1)]'}`}></div>
     </div>
   );
 };
@@ -66,11 +66,62 @@ interface DashboardProps {
   setLanguage: (lang: Language) => void;
 }
 
+interface WeatherAlert {
+  type: 'rain' | 'frost' | 'heat';
+  key: string; // Translation key
+}
+
 export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout, isDark, toggleTheme, language, setLanguage }) => {
   const [activeFeature, setActiveFeature] = useState<DashboardFeature | null>(null);
+  const [alert, setAlert] = useState<WeatherAlert | null>(null);
   const t = translations[language];
 
   const closeModal = () => setActiveFeature(null);
+
+  useEffect(() => {
+    // Check for real-time weather alerts based on location
+    if (!navigator.geolocation) return;
+
+    const checkWeatherAlerts = () => {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          // Fetch current weather only
+          const response = await fetch(
+            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`
+          );
+          
+          if (!response.ok) return;
+
+          const data = await response.json();
+          const { weathercode, temperature } = data.current_weather;
+
+          // Logic for alerts based on real data
+          let detectedAlert: WeatherAlert | null = null;
+
+          // Rain Codes (WMO): 51-67 (Drizzle/Rain), 80-82 (Showers), 95-99 (Thunderstorm)
+          const rainCodes = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99];
+          
+          if (rainCodes.includes(weathercode)) {
+            detectedAlert = { type: 'rain', key: 'alertHeavyRain' };
+          } else if (temperature > 35) {
+            // Heatwave condition
+            detectedAlert = { type: 'heat', key: 'alertHeatwave' };
+          } else if (temperature < 5) {
+            // Frost condition
+            detectedAlert = { type: 'frost', key: 'alertFrost' };
+          }
+
+          setAlert(detectedAlert);
+
+        } catch (error) {
+          console.error("Failed to check weather alerts", error);
+        }
+      });
+    };
+
+    checkWeatherAlerts();
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-slate-950 transition-colors duration-300">
@@ -123,6 +174,31 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout, isDark, to
 
       <main className="max-w-7xl mx-auto p-4 md:p-6 pb-24">
         
+        {/* Weather Alert Banner */}
+        {alert && (
+          <div className="mb-6 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4 rounded-r-xl shadow-sm flex items-start justify-between animate-in slide-in-from-top-4 duration-500">
+            <div className="flex gap-4">
+              <div className="p-2 bg-red-100 dark:bg-red-900/40 rounded-full h-fit">
+                <IconAlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400 animate-pulse" />
+              </div>
+              <div>
+                <h4 className="font-bold text-red-700 dark:text-red-300 flex items-center gap-2">
+                  {t.weatherAlert}
+                  <span className="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider">High Risk</span>
+                </h4>
+                <p className="text-sm text-red-600 dark:text-red-200 mt-1">{t[alert.key]}</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setAlert(null)}
+              className="p-1 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-full text-red-500 dark:text-red-300 transition-colors"
+              title={t.dismiss}
+            >
+              <IconX className="w-5 h-5" />
+            </button>
+          </div>
+        )}
+
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
            {/* Left Column: Features */}
@@ -143,7 +219,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout, isDark, to
                 <DashboardCard 
                   title={t.cropPlanner} 
                   icon={IconSprout} 
-                  highlight
                   onClick={() => setActiveFeature(DashboardFeature.CROP_MANAGER)}
                 />
                 <DashboardCard 
@@ -164,7 +239,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout, isDark, to
               </div>
 
               {/* Market Widget (Large) */}
-              <div className="h-[600px]">
+              <div className="h-[650px]">
                 <MarketWidget isDark={isDark} language={language} />
               </div>
            </div>
